@@ -334,6 +334,7 @@ func New(
 		&app.IBCKeeper.PortKeeper,
 		app.IBCKeeper.ConnectionKeeper,
 		app.IBCKeeper.ClientKeeper,
+		nil,
 		app.SlashingKeeper,
 		app.BankKeeper,
 		app.AccountKeeper,
@@ -344,7 +345,7 @@ func New(
 
 	// register slashing module Slashing hooks to the consumer keeper
 	app.ConsumerKeeper = *app.ConsumerKeeper.SetHooks(app.SlashingKeeper.Hooks())
-	consumerModule := ibcconsumer.NewAppModule(app.ConsumerKeeper)
+	consumerModule := ibcconsumer.NewAppModule(app.ConsumerKeeper, nil)
 
 	app.TransferKeeper = ibctransferkeeper.NewKeeper(
 		appCodec,

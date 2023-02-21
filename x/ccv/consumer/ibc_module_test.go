@@ -124,7 +124,7 @@ func TestOnChanOpenInit(t *testing.T) {
 		// Common setup
 		consumerKeeper, ctx, ctrl, mocks := testkeeper.GetConsumerKeeperAndCtx(
 			t, testkeeper.NewInMemKeeperParams(t))
-		consumerModule := consumer.NewAppModule(consumerKeeper)
+		consumerModule := consumer.NewAppModule(consumerKeeper, nil)
 
 		consumerKeeper.SetPort(ctx, ccv.ConsumerPortID)
 		consumerKeeper.SetProviderClientID(ctx, "clientIDToProvider")
@@ -175,7 +175,7 @@ func TestOnChanOpenTry(t *testing.T) {
 	consumerKeeper, ctx, ctrl, _ := testkeeper.GetConsumerKeeperAndCtx(t, testkeeper.NewInMemKeeperParams(t))
 	// No external keeper methods should be called
 	defer ctrl.Finish()
-	consumerModule := consumer.NewAppModule(consumerKeeper)
+	consumerModule := consumer.NewAppModule(consumerKeeper, nil)
 
 	// OnOpenTry must error even with correct arguments
 	_, err := consumerModule.OnChanOpenTry(
@@ -269,7 +269,7 @@ func TestOnChanOpenAck(t *testing.T) {
 		// Common setup
 		consumerKeeper, ctx, ctrl, mocks := testkeeper.GetConsumerKeeperAndCtx(
 			t, testkeeper.NewInMemKeeperParams(t))
-		consumerModule := consumer.NewAppModule(consumerKeeper)
+		consumerModule := consumer.NewAppModule(consumerKeeper, nil)
 
 		// Instantiate valid params as default. Individual test cases mutate these as needed.
 		params := params{
@@ -319,7 +319,7 @@ func TestOnChanOpenAck(t *testing.T) {
 func TestOnChanOpenConfirm(t *testing.T) {
 	consumerKeeper, ctx, ctrl, _ := testkeeper.GetConsumerKeeperAndCtx(t, testkeeper.NewInMemKeeperParams(t))
 	defer ctrl.Finish()
-	consumerModule := consumer.NewAppModule(consumerKeeper)
+	consumerModule := consumer.NewAppModule(consumerKeeper, nil)
 
 	err := consumerModule.OnChanOpenConfirm(ctx, ccv.ConsumerPortID, "channel-1")
 	require.Error(t, err, "OnChanOpenConfirm callback must error on consumer chain")
@@ -359,7 +359,7 @@ func TestOnChanCloseInit(t *testing.T) {
 
 	for _, tc := range testCases {
 		consumerKeeper, ctx, ctrl, _ := testkeeper.GetConsumerKeeperAndCtx(t, testkeeper.NewInMemKeeperParams(t))
-		consumerModule := consumer.NewAppModule(consumerKeeper)
+		consumerModule := consumer.NewAppModule(consumerKeeper, nil)
 
 		if tc.establishedProviderExists {
 			consumerKeeper.SetProviderChannel(ctx, "provider")
@@ -387,7 +387,7 @@ func TestOnChanCloseConfirm(t *testing.T) {
 	// No external keeper methods should be called
 	defer ctrl.Finish()
 
-	consumerModule := consumer.NewAppModule(consumerKeeper)
+	consumerModule := consumer.NewAppModule(consumerKeeper, nil)
 
 	// Nothing happens, no error returned
 	err := consumerModule.OnChanCloseConfirm(ctx, "portID", "channelID")

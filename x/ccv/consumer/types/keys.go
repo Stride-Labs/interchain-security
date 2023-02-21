@@ -68,8 +68,14 @@ const (
 	// because the client is expired
 	PendingDataPacketsBytePrefix
 
-	// CrossChainValidatorPrefix is the byte prefix that will store cross-chain validators by consensus address
+	// CrossChainValidatorPrefix is the byte that will store cross-chain validators by consensus address
 	CrossChainValidatorBytePrefix
+
+	// PreCCVByteKey is the byte to store the consumer is running on democracy staking module without consumer
+	PreCCVByteKey
+
+	// LastSovereignHeightByteKey is the byte that will store last sovereign height
+	LastSovereignHeightByteKey
 )
 
 // PortKey returns the key to the port ID in the store
@@ -102,6 +108,14 @@ func PendingChangesKey() []byte {
 	return []byte{PendingChangesByteKey}
 }
 
+func PreCCVKey() []byte {
+	return []byte{PreCCVByteKey}
+}
+
+func LastSovereignHeightKey() []byte {
+	return []byte{LastSovereignHeightByteKey}
+}
+
 // PacketMaturityTimeKey returns the key for storing the maturity time for a given received VSC packet id
 func PacketMaturityTimeKey(vscID uint64, maturityTime time.Time) []byte {
 	ts := uint64(maturityTime.UTC().UnixNano())
@@ -113,6 +127,12 @@ func PacketMaturityTimeKey(vscID uint64, maturityTime time.Time) []byte {
 		// Append the vscID
 		sdk.Uint64ToBigEndian(vscID),
 	)
+}
+
+// IdFromPacketMaturityTimeKey returns the packet id corresponding to a maturity time full key (including prefix)
+func IdFromPacketMaturityTimeKey(key []byte) uint64 {
+	// Bytes after single byte prefix are converted to uin64
+	return binary.BigEndian.Uint64(key[1:])
 }
 
 // HeightValsetUpdateIDKey returns the key to a valset update ID for a given block height
