@@ -56,7 +56,7 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.
 	var genesisState types.GenesisState
 
 	cdc.MustUnmarshalJSON(data, &genesisState)
-	valUpdates := staking.InitGenesis(ctx, am.keeper, am.accKeeper, am.bankKeeper, &genesisState)
+	valUpdates := am.keeper.InitGenesis(ctx, &genesisState)
 	if am.consumerKeeper.IsPreCCV(ctx) {
 		return valUpdates
 	}

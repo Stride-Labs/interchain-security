@@ -10,6 +10,9 @@ import (
 	gov "github.com/cosmos/cosmos-sdk/x/gov"
 	"github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	v1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
+	"github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
+	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
 
@@ -28,11 +31,11 @@ type AppModule struct {
 	gov.AppModule
 
 	keeper                keeper.Keeper
-	isProposalWhitelisted func(govtypes.Content) bool
+	isProposalWhitelisted func(govv1beta1.Content) bool
 }
 
 // NewAppModule creates a new AppModule object using the native x/governance module AppModule constructor.
-func NewAppModule(cdc codec.Codec, keeper keeper.Keeper, ak govtypes.AccountKeeper, bk govtypes.BankKeeper, isProposalWhitelisted func(govtypes.Content) bool) AppModule {
+func NewAppModule(cdc codec.Codec, keeper keeper.Keeper, ak govtypes.AccountKeeper, bk govtypes.BankKeeper, isProposalWhitelisted func(govv1beta1.Content) bool) AppModule {
 	govAppModule := gov.NewAppModule(cdc, keeper, ak, bk)
 	return AppModule{
 		AppModule:             govAppModule,
@@ -43,7 +46,7 @@ func NewAppModule(cdc codec.Codec, keeper keeper.Keeper, ak govtypes.AccountKeep
 
 func (am AppModule) EndBlock(ctx sdk.Context, request abci.RequestEndBlock) []abci.ValidatorUpdate {
 
-	am.keeper.IterateActiveProposalsQueue(ctx, ctx.BlockHeader().Time, func(proposal govtypes.Proposal) bool {
+	am.keeper.IterateActiveProposalsQueue(ctx, ctx.BlockHeader().Time, func(proposal v1.Proposal) bool {
 		//if there are forbidden proposals in active proposals queue, refund deposit, delete votes for that proposal
 		//and delete proposal from all storages
 		deleteForbiddenProposal(ctx, am, proposal)
@@ -53,7 +56,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, request abci.RequestEndBlock) []ab
 	return am.AppModule.EndBlock(ctx, request)
 }
 
-func deleteForbiddenProposal(ctx sdk.Context, am AppModule, proposal govtypes.Proposal) {
+func deleteForbiddenProposal(ctx sdk.Context, am AppModule, proposal v1beta1.Proposal) {
 	if am.isProposalWhitelisted(proposal.GetContent()) {
 		return
 	}
