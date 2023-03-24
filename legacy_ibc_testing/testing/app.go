@@ -22,8 +22,8 @@ import (
 	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
 	tmtypes "github.com/tendermint/tendermint/types"
 
-	"github.com/cosmos/ibc-go/v4/modules/core/keeper"
-
+	storetypes "github.com/cosmos/cosmos-sdk/store/types"
+	"github.com/cosmos/ibc-go/v5/modules/core/keeper"
 	"github.com/cosmos/interchain-security/legacy_ibc_testing/simapp"
 )
 
@@ -52,7 +52,7 @@ type TestingApp interface {
 	AppCodec() codec.Codec
 
 	// Implemented by BaseApp
-	LastCommitID() sdk.CommitID
+	LastCommitID() storetypes.CommitID
 	LastBlockHeight() int64
 }
 
