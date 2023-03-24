@@ -11,7 +11,6 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/gov/keeper"
 	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
 	v1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1"
-	"github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 	abci "github.com/tendermint/tendermint/abci/types"
 )
@@ -56,7 +55,7 @@ func (am AppModule) EndBlock(ctx sdk.Context, request abci.RequestEndBlock) []ab
 	return am.AppModule.EndBlock(ctx, request)
 }
 
-func deleteForbiddenProposal(ctx sdk.Context, am AppModule, proposal v1beta1.Proposal) {
+func deleteForbiddenProposal(ctx sdk.Context, am AppModule, proposal v1.Proposal) {
 	if am.isProposalWhitelisted(proposal.GetContent()) {
 		return
 	}
@@ -67,8 +66,8 @@ func deleteForbiddenProposal(ctx sdk.Context, am AppModule, proposal v1beta1.Pro
 	// private and cannot be called directly from the overridden app module
 	am.keeper.Tally(ctx, proposal)
 
-	am.keeper.DeleteProposal(ctx, proposal.ProposalId)
-	am.keeper.RefundDeposits(ctx, proposal.ProposalId)
+	am.keeper.DeleteProposal(ctx, proposal.Id)
+	am.keeper.RefundAndDeleteDeposits(ctx, proposal.Id)
 
 	ctx.EventManager().EmitEvent(
 		sdk.NewEvent(
@@ -81,7 +80,5 @@ func deleteForbiddenProposal(ctx sdk.Context, am AppModule, proposal v1beta1.Pro
 	logger := am.keeper.Logger(ctx)
 	logger.Info(
 		"proposal is not whitelisted; deleted",
-		"proposal", proposal.ProposalId,
-		"title", proposal.GetTitle(),
-		"total_deposit", proposal.TotalDeposit.String())
+		"proposal", proposal.Id)
 }

@@ -95,7 +95,7 @@ type ClientKeeper interface {
 
 // ConsumerHooks event hooks for newly bonded cross-chain validators
 type ConsumerHooks interface {
-	AfterValidatorBonded(ctx sdk.Context, consAddr sdk.ConsAddress, _ sdk.ValAddress)
+	AfterValidatorBonded(ctx sdk.Context, consAddr sdk.ConsAddress, _ sdk.ValAddress) error
 }
 
 // BankKeeper defines the expected interface needed to retrieve account balances.

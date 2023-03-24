@@ -4,14 +4,14 @@ import (
 	"fmt"
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
-	govtypes "github.com/cosmos/cosmos-sdk/x/gov/types"
+	govv1beta1 "github.com/cosmos/cosmos-sdk/x/gov/types/v1beta1"
 )
 
 type ForbiddenProposalsDecorator struct {
-	IsProposalWhitelisted func(govtypes.Content) bool
+	IsProposalWhitelisted func(govv1beta1.Content) bool
 }
 
-func NewForbiddenProposalsDecorator(whiteListFn func(govtypes.Content) bool) ForbiddenProposalsDecorator {
+func NewForbiddenProposalsDecorator(whiteListFn func(govv1beta1.Content) bool) ForbiddenProposalsDecorator {
 	return ForbiddenProposalsDecorator{IsProposalWhitelisted: whiteListFn}
 }
 
@@ -19,7 +19,7 @@ func (decorator ForbiddenProposalsDecorator) AnteHandle(ctx sdk.Context, tx sdk.
 	currHeight := ctx.BlockHeight()
 
 	for _, msg := range tx.GetMsgs() {
-		submitProposalMgs, ok := msg.(*govtypes.MsgSubmitProposal)
+		submitProposalMgs, ok := msg.(*govv1beta1.MsgSubmitProposal)
 		//if the message is MsgSubmitProposal, check if proposal is whitelisted
 		if ok {
 			if !decorator.IsProposalWhitelisted(submitProposalMgs.GetContent()) {
