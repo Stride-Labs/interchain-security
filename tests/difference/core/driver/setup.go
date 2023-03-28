@@ -34,11 +34,11 @@ import (
 	stakingkeeper "github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	appConsumer "github.com/cosmos/interchain-security/app/consumer"
 	appProvider "github.com/cosmos/interchain-security/provider/app"
+	providerkeeper "github.com/cosmos/interchain-security/provider/x/ccv/keeper"
 	icstestingutils "github.com/cosmos/interchain-security/testutil/ibc_testing"
 	simibc "github.com/cosmos/interchain-security/testutil/simibc"
 	consumerkeeper "github.com/cosmos/interchain-security/x/ccv/consumer/keeper"
 	consumertypes "github.com/cosmos/interchain-security/x/ccv/consumer/types"
-	providerkeeper "github.com/cosmos/interchain-security/x/ccv/provider/keeper"
 
 	ccv "github.com/cosmos/interchain-security/x/ccv/types"
 )

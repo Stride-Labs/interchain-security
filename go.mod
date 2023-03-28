@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/cosmos/cosmos-sdk v0.45.11
+	github.com/cosmos/interchain-security/provider v0.0.0
 	github.com/gogo/protobuf v1.3.3
 	github.com/golang/protobuf v1.5.2
 	github.com/gorilla/mux v1.8.0
@@ -141,4 +142,5 @@ replace (
 	github.com/stretchr/testify => github.com/stretchr/testify v1.7.1
 	github.com/tendermint/tendermint => github.com/informalsystems/tendermint v0.34.26
 	google.golang.org/grpc => google.golang.org/grpc v1.33.2
+	github.com/cosmos/interchain-security/provider => ./provider
 )

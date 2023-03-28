@@ -14,8 +14,8 @@ import (
 	slashingtypes "github.com/cosmos/cosmos-sdk/x/slashing/types"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
 	ibctesting "github.com/cosmos/interchain-security/legacy_ibc_testing/testing"
+	providerkeeper "github.com/cosmos/interchain-security/provider/x/ccv/keeper"
 	consumerkeeper "github.com/cosmos/interchain-security/x/ccv/consumer/keeper"
-	providerkeeper "github.com/cosmos/interchain-security/x/ccv/provider/keeper"
 	ccvtypes "github.com/cosmos/interchain-security/x/ccv/types"
 	abci "github.com/tendermint/tendermint/abci/types"
 )

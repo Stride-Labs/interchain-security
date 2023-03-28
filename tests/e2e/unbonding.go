@@ -5,7 +5,7 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	providerkeeper "github.com/cosmos/interchain-security/x/ccv/provider/keeper"
+	providerkeeper "github.com/cosmos/interchain-security/provider/x/ccv/keeper"
 	ccv "github.com/cosmos/interchain-security/x/ccv/types"
 )
 

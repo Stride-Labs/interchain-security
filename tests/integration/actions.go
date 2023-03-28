@@ -15,8 +15,8 @@ import (
 	clienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
 	consumertypes "github.com/cosmos/interchain-security/x/ccv/consumer/types"
 
-	"github.com/cosmos/interchain-security/x/ccv/provider/client"
-	"github.com/cosmos/interchain-security/x/ccv/provider/types"
+	"github.com/cosmos/interchain-security/provider/x/ccv/client"
+	"github.com/cosmos/interchain-security/provider/x/ccv/types"
 	"github.com/tidwall/gjson"
 )
 
