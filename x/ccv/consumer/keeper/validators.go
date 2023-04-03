@@ -47,7 +47,10 @@ func (k Keeper) ApplyCCValidatorChanges(ctx sdk.Context, changes []abci.Validato
 			}
 
 			k.SetCCValidator(ctx, ccVal)
-			k.AfterValidatorBonded(ctx, consAddr, nil)
+			err = k.AfterValidatorBonded(ctx, consAddr, nil)
+			if err != nil {
+				panic(err)
+			}
 
 		} else {
 			// edge case: we received an update for 0 power
@@ -183,6 +186,28 @@ func (k Keeper) Delegation(ctx sdk.Context, addr sdk.AccAddress, valAddr sdk.Val
 		}
 
 		return k.stakingKeeper.Delegation(ctx, addr, valAddr)
+	}
+	panic("unused after preCCV")
+}
+
+func (k Keeper) GetAllValidators(ctx sdk.Context) []stakingtypes.Validator {
+	if k.IsPreCCV(ctx) || ctx.BlockHeight() <= k.LastSovereignHeight(ctx) {
+		if k.stakingKeeper == nil {
+			panic("empty staking keeper")
+		}
+
+		return k.stakingKeeper.GetAllValidators(ctx)
+	}
+	panic("unused after preCCV")
+}
+
+func (k Keeper) GetParams(ctx sdk.Context) (params stakingtypes.Params) {
+	if k.IsPreCCV(ctx) || ctx.BlockHeight() <= k.LastSovereignHeight(ctx) {
+		if k.stakingKeeper == nil {
+			panic("empty staking keeper")
+		}
+
+		return k.stakingKeeper.GetParams(ctx)
 	}
 	panic("unused after preCCV")
 }
