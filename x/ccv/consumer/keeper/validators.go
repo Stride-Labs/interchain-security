@@ -3,6 +3,7 @@ package keeper
 import (
 	"time"
 
+	"cosmossdk.io/math"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 
 	abci "github.com/cometbft/cometbft/abci/types"
@@ -123,18 +124,22 @@ func (k Keeper) ValidatorByConsAddr(ctx sdk.Context, consAddr sdk.ConsAddress) s
 
 // Slash queues a slashing request for the the provider chain
 // All queued slashing requests will be cleared in EndBlock
-func (k Keeper) Slash(ctx sdk.Context, addr sdk.ConsAddress, infractionHeight, power int64, slashFactor sdk.Dec, infraction stakingtypes.InfractionType) {
-	if infraction == stakingtypes.InfractionEmpty {
-		return
+func (k Keeper) Slash(ctx sdk.Context, consAddr sdk.ConsAddress, infractionHeight int64, power int64, slashFactor sdk.Dec) math.Int {
+	// Do nothing when no reason provided for slash
+	return math.ZeroInt()
+}
+
+func (k Keeper) SlashWithInfractionReason(ctx sdk.Context, consAddr sdk.ConsAddress, infractionHeight int64, power int64, slashFactor sdk.Dec, infraction stakingtypes.Infraction) math.Int {
+	if infraction == stakingtypes.Infraction_INFRACTION_UNSPECIFIED {
+		return math.ZeroInt()
 	}
 
 	if k.IsPreCCV(ctx) || ctx.BlockHeight() <= k.LastSovereignHeight(ctx) {
 		if k.stakingKeeper == nil {
-			return
+			return math.ZeroInt()
 		}
 
-		k.stakingKeeper.Slash(ctx, addr, infractionHeight, power, slashFactor, infraction)
-		return
+		return k.stakingKeeper.SlashWithInfractionReason(ctx, consAddr, infractionHeight, power, slashFactor, infraction)
 	}
 
 	// get VSC ID for infraction height
@@ -148,11 +153,12 @@ func (k Keeper) Slash(ctx sdk.Context, addr sdk.ConsAddress, infractionHeight, p
 	k.QueueSlashPacket(
 		ctx,
 		abci.Validator{
-			Address: addr.Bytes(),
+			Address: consAddr.Bytes(),
 			Power:   power},
 		vscID,
 		infraction,
 	)
+	return math.ZeroInt()
 }
 
 // Jail performs jail operation on democracy staking validator if block height after last sovereign height

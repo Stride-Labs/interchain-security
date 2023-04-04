@@ -5,6 +5,7 @@ import (
 	"time"
 
 	abci "github.com/cometbft/cometbft/abci/types"
+	tmprotocrypto "github.com/cometbft/cometbft/proto/tendermint/crypto"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
@@ -12,7 +13,6 @@ import (
 	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 	host "github.com/cosmos/ibc-go/v7/modules/core/24-host"
 	ccv "github.com/cosmos/interchain-security/x/ccv/types"
-	tmprotocrypto "github.com/tendermint/tendermint/proto/tendermint/crypto"
 )
 
 func AccumulateChanges(currentChanges, newChanges []abci.ValidatorUpdate) []abci.ValidatorUpdate {
@@ -65,31 +65,19 @@ func SendIBCPacket(
 	packetData []byte,
 	timeoutPeriod time.Duration,
 ) error {
-	channel, ok := channelKeeper.GetChannel(ctx, portID, channelID)
-	if !ok {
-		return sdkerrors.Wrapf(channeltypes.ErrChannelNotFound, "channel not found for channel ID: %s", channelID)
-	}
 	channelCap, ok := scopedKeeper.GetCapability(ctx, host.ChannelCapabilityPath(portID, channelID))
 	if !ok {
 		return sdkerrors.Wrap(channeltypes.ErrChannelCapabilityNotFound, "module does not own channel capability")
 	}
 
-	// get the next sequence
-	sequence, found := channelKeeper.GetNextSequenceSend(ctx, portID, channelID)
-	if !found {
-		return sdkerrors.Wrapf(
-			channeltypes.ErrSequenceSendNotFound,
-			"source port: %s, source channel: %s", portID, channelID,
-		)
-	}
-	packet := channeltypes.NewPacket(
-		packetData, sequence,
+	_, err := channelKeeper.SendPacket(ctx,
+		channelCap,
 		portID, channelID,
-		channel.Counterparty.PortId, channel.Counterparty.ChannelId,
-		clienttypes.Height{}, uint64(ctx.BlockTime().Add(timeoutPeriod).UnixNano()),
+		clienttypes.Height{},
+		uint64(ctx.BlockTime().Add(timeoutPeriod).UnixNano()),
+		packetData,
 	)
-
-	return channelKeeper.SendPacket(ctx, channelCap, packet)
+	return err
 }
 
 // AppendMany appends a variable number of byte slices together
