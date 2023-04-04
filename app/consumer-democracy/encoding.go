@@ -2,7 +2,7 @@ package app
 
 import (
 	"github.com/cosmos/cosmos-sdk/std"
-	"github.com/cosmos/interchain-security/app/sovereign/params"
+	"github.com/cosmos/interchain-security/app/consumer-democracy/params"
 )
 
 // MakeEncodingConfig creates an EncodingConfig for testing

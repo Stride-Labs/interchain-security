@@ -14,8 +14,9 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	consumertypes "github.com/cosmos/interchain-security/x/ccv/consumer/types"
 
+	abci "github.com/cometbft/cometbft/abci/types"
+	"github.com/cosmos/cosmos-sdk/x/distribution/exported"
 	distrtypes "github.com/cosmos/cosmos-sdk/x/distribution/types"
-	abci "github.com/tendermint/tendermint/abci/types"
 )
 
 var (
@@ -37,7 +38,8 @@ type AppModule struct {
 	keeper        keeper.Keeper
 	accountKeeper distrtypes.AccountKeeper
 	bankKeeper    distrtypes.BankKeeper
-	stakingKeeper stakingkeeper.Keeper
+	stakingKeeper *stakingkeeper.Keeper
+	subspace      exported.Subspace
 
 	feeCollectorName string
 }
@@ -46,9 +48,9 @@ type AppModule struct {
 // AppModule constructor.
 func NewAppModule(
 	cdc codec.Codec, keeper keeper.Keeper, ak distrtypes.AccountKeeper,
-	bk distrtypes.BankKeeper, sk stakingkeeper.Keeper, feeCollectorName string,
+	bk distrtypes.BankKeeper, sk *stakingkeeper.Keeper, subspace exported.Subspace, feeCollectorName string,
 ) AppModule {
-	distrAppMod := distr.NewAppModule(cdc, keeper, ak, bk, sk)
+	distrAppMod := distr.NewAppModule(cdc, keeper, ak, bk, sk, subspace)
 	return AppModule{
 		AppModule:        distrAppMod,
 		keeper:           keeper,
