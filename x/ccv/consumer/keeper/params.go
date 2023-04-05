@@ -10,7 +10,7 @@ import (
 )
 
 // GetParams returns the params for the consumer ccv module
-func (k Keeper) GetParams(ctx sdk.Context) types.Params {
+func (k Keeper) GetConsumerParams(ctx sdk.Context) types.Params {
 	return types.NewParams(
 		k.GetEnabled(ctx),
 		k.GetBlocksPerDistributionTransmission(ctx),
