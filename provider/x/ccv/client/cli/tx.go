@@ -40,8 +40,15 @@ func NewAssignConsumerKeyCmd() *cobra.Command {
 				return err
 			}
 
-			txf := tx.NewFactoryCLI(clientCtx, cmd.Flags()).
-				WithTxConfig(clientCtx.TxConfig).WithAccountRetriever(clientCtx.AccountRetriever)
+			factory, err := tx.NewFactoryCLI(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			txf := factory.WithTxConfig(clientCtx.TxConfig).WithAccountRetriever(clientCtx.AccountRetriever)
+			if err != nil {
+				return err
+			}
 
 			providerValAddr := clientCtx.GetFromAddress()
 			var consumerPubKey cryptotypes.PubKey

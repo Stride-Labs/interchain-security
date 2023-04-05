@@ -6,8 +6,8 @@ package types
 import (
 	context "context"
 	fmt "fmt"
-	types "github.com/cosmos/interchain-security/x/ccv/consumer/types"
-	types1 "github.com/cosmos/interchain-security/x/ccv/types"
+	types "github.com/cosmos/interchain-security/provider/x/consumer/types"
+	types1 "github.com/cosmos/interchain-security/provider/x/ccv/common_types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	grpc1 "github.com/gogo/protobuf/grpc"
 	proto "github.com/gogo/protobuf/proto"

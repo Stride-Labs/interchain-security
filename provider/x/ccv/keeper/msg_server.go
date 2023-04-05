@@ -3,14 +3,14 @@ package keeper
 import (
 	"context"
 
+	tmstrings "github.com/cometbft/cometbft/libs/strings"
 	cryptocodec "github.com/cosmos/cosmos-sdk/crypto/codec"
 	cryptotypes "github.com/cosmos/cosmos-sdk/crypto/types"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
+	ccvtypes "github.com/cosmos/interchain-security/provider/x/ccv/common_types"
 	"github.com/cosmos/interchain-security/provider/x/ccv/types"
-	ccvtypes "github.com/cosmos/interchain-security/x/ccv/types"
-	tmstrings "github.com/tendermint/tendermint/libs/strings"
 )
 
 type msgServer struct {

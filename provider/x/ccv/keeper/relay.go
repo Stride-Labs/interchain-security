@@ -7,12 +7,12 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
-	clienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
-	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
-	"github.com/cosmos/ibc-go/v4/modules/core/exported"
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
+	"github.com/cosmos/ibc-go/v7/modules/core/exported"
+	ccv "github.com/cosmos/interchain-security/provider/x/ccv/common_types"
 	providertypes "github.com/cosmos/interchain-security/provider/x/ccv/types"
-	ccv "github.com/cosmos/interchain-security/x/ccv/types"
-	utils "github.com/cosmos/interchain-security/x/ccv/utils"
+	utils "github.com/cosmos/interchain-security/provider/x/ccv/utils"
 )
 
 // OnRecvVSCMaturedPacket handles a VSCMatured packet
@@ -315,7 +315,7 @@ func (k Keeper) OnRecvSlashPacket(ctx sdk.Context, packet channeltypes.Packet, d
 	consumerConsAddr := sdk.ConsAddress(data.Validator.Address)
 	providerConsAddr := k.GetProviderAddrFromConsumerAddr(ctx, chainID, consumerConsAddr)
 
-	if data.Infraction == stakingtypes.DoubleSign {
+	if data.Infraction == stakingtypes.Infraction_INFRACTION_DOUBLE_SIGN {
 		// getMappedInfractionHeight is already checked in ValidateSlashPacket
 		infractionHeight, _ := k.getMappedInfractionHeight(ctx, chainID, data.ValsetUpdateId)
 
@@ -370,7 +370,7 @@ func (k Keeper) ValidateSlashPacket(ctx sdk.Context, chainID string,
 			"the validator update id %d for chain %s", data.ValsetUpdateId, chainID)
 	}
 
-	if data.Infraction != stakingtypes.DoubleSign && data.Infraction != stakingtypes.Downtime {
+	if data.Infraction != stakingtypes.Infraction_INFRACTION_DOUBLE_SIGN && data.Infraction != stakingtypes.Infraction_INFRACTION_DOWNTIME {
 		return fmt.Errorf("invalid infraction type: %s", data.Infraction)
 	}
 
