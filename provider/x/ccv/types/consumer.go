@@ -1,8 +1,8 @@
 package types
 
 import (
-	consumertypes "github.com/cosmos/interchain-security/x/ccv/consumer/types"
-	ccv "github.com/cosmos/interchain-security/x/ccv/types"
+	ccv "github.com/cosmos/interchain-security/provider/x/ccv/common_types"
+	consumertypes "github.com/cosmos/interchain-security/provider/x/consumer/types"
 )
 
 func NewConsumerStates(
