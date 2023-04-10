@@ -176,9 +176,9 @@ require (
 replace (
 	github.com/btcsuite/btcd => github.com/btcsuite/btcd v0.22.2 //indirect
 	// github.com/cosmos/cosmos-sdk => github.com/cosmos/cosmos-sdk v0.45.13-ics
-	// github.com/cosmos/interchain-security/provider => ./provider
 	github.com/gogo/protobuf => github.com/regen-network/protobuf v1.3.3-alpha.regen.1
 	github.com/stretchr/testify => github.com/stretchr/testify v1.7.1
 	github.com/tendermint/tendermint => github.com/informalsystems/tendermint v0.34.26
-// google.golang.org/grpc => google.golang.org/grpc v1.33.2
+	// google.golang.org/grpc => google.golang.org/grpc v1.33.2
+	github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 )
