@@ -17,7 +17,7 @@ import (
 
 	appConsumer "github.com/cosmos/interchain-security/app/consumer"
 	appConsumerDemocracy "github.com/cosmos/interchain-security/app/consumer-democracy"
-	appProvider "github.com/cosmos/interchain-security/app/provider"
+	appProvider "github.com/cosmos/interchain-security/provider/app"
 )
 
 // ProviderAppIniter implements ibctesting.AppIniter for a provider app

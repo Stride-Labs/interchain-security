@@ -3,13 +3,14 @@ package staking
 import (
 	"encoding/json"
 
+	abci "github.com/cometbft/cometbft/abci/types"
 	"github.com/cosmos/cosmos-sdk/codec"
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	"github.com/cosmos/cosmos-sdk/types/module"
 	"github.com/cosmos/cosmos-sdk/x/staking"
+	"github.com/cosmos/cosmos-sdk/x/staking/exported"
 	"github.com/cosmos/cosmos-sdk/x/staking/keeper"
 	"github.com/cosmos/cosmos-sdk/x/staking/types"
-	abci "github.com/tendermint/tendermint/abci/types"
 )
 
 var (
@@ -29,7 +30,7 @@ type AppModule struct {
 	// embed the Cosmos SDK's x/staking AppModule
 	staking.AppModule
 
-	keeper         keeper.Keeper
+	keeper         *keeper.Keeper
 	accKeeper      types.AccountKeeper
 	bankKeeper     types.BankKeeper
 	consumerKeeper ConsumerKeeper
@@ -37,8 +38,12 @@ type AppModule struct {
 
 // NewAppModule creates a new AppModule object using the native x/staking module
 // AppModule constructor.
-func NewAppModule(cdc codec.Codec, keeper keeper.Keeper, ak types.AccountKeeper, bk types.BankKeeper, ck ConsumerKeeper) AppModule {
-	stakingAppMod := staking.NewAppModule(cdc, keeper, ak, bk)
+func NewAppModule(cdc codec.Codec,
+	keeper *keeper.Keeper,
+	ak types.AccountKeeper,
+	bk types.BankKeeper, ck ConsumerKeeper, subspace exported.Subspace) AppModule {
+	stakingAppMod := staking.NewAppModule(cdc, keeper, ak, bk, subspace)
+
 	return AppModule{
 		AppModule:      stakingAppMod,
 		keeper:         keeper,
@@ -56,7 +61,7 @@ func (am AppModule) InitGenesis(ctx sdk.Context, cdc codec.JSONCodec, data json.
 	var genesisState types.GenesisState
 
 	cdc.MustUnmarshalJSON(data, &genesisState)
-	valUpdates := staking.InitGenesis(ctx, am.keeper, am.accKeeper, am.bankKeeper, &genesisState)
+	valUpdates := am.keeper.InitGenesis(ctx, &genesisState)
 	if am.consumerKeeper.IsPreCCV(ctx) {
 		return valUpdates
 	}

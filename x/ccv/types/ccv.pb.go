@@ -5,10 +5,10 @@ package types
 
 import (
 	fmt "fmt"
+	types "github.com/cometbft/cometbft/abci/types"
 	types1 "github.com/cosmos/cosmos-sdk/x/staking/types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	types "github.com/tendermint/tendermint/abci/types"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -224,7 +224,7 @@ type SlashPacketData struct {
 	// map to the infraction block height on the provider
 	ValsetUpdateId uint64 `protobuf:"varint,2,opt,name=valset_update_id,json=valsetUpdateId,proto3" json:"valset_update_id,omitempty"`
 	// tell if the slashing is for a downtime or a double-signing infraction
-	Infraction types1.InfractionType `protobuf:"varint,3,opt,name=infraction,proto3,enum=cosmos.staking.v1beta1.InfractionType" json:"infraction,omitempty"`
+	Infraction types1.Infraction `protobuf:"varint,3,opt,name=infraction,proto3,enum=cosmos.staking.v1beta1.Infraction" json:"infraction,omitempty"`
 }
 
 func (m *SlashPacketData) Reset()         { *m = SlashPacketData{} }
@@ -274,11 +274,11 @@ func (m *SlashPacketData) GetValsetUpdateId() uint64 {
 	return 0
 }
 
-func (m *SlashPacketData) GetInfraction() types1.InfractionType {
+func (m *SlashPacketData) GetInfraction() types1.Infraction {
 	if m != nil {
 		return m.Infraction
 	}
-	return types1.InfractionEmpty
+	return types1.Infraction_INFRACTION_UNSPECIFIED
 }
 
 // MaturedUnbondingOps defines a list of ids corresponding to ids of matured unbonding operations.
@@ -1382,7 +1382,7 @@ func (m *SlashPacketData) Unmarshal(dAtA []byte) error {
 				}
 				b := dAtA[iNdEx]
 				iNdEx++
-				m.Infraction |= types1.InfractionType(b&0x7F) << shift
+				m.Infraction |= types1.Infraction(b&0x7F) << shift
 				if b < 0x80 {
 					break
 				}

@@ -7,10 +7,11 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
 
-	transfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
-	clienttypes "github.com/cosmos/ibc-go/v4/modules/core/02-client/types"
-	channeltypes "github.com/cosmos/ibc-go/v4/modules/core/04-channel/types"
+	transfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
+	clienttypes "github.com/cosmos/ibc-go/v7/modules/core/02-client/types"
+	channeltypes "github.com/cosmos/ibc-go/v7/modules/core/04-channel/types"
 
+	ibctransfertypes "github.com/cosmos/ibc-go/v7/modules/apps/transfer/types"
 	"github.com/cosmos/interchain-security/x/ccv/consumer/types"
 	ccv "github.com/cosmos/interchain-security/x/ccv/types"
 )
@@ -78,7 +79,7 @@ func (k Keeper) DistributeRewardsInternally(ctx sdk.Context) {
 	// tokens do not go through the consumer redistribute split twice in the
 	// event that the transfer fails the tokens are returned to the consumer
 	// chain.
-	remainingTokens := fpTokens.Sub(consRedistrTokens)
+	remainingTokens := fpTokens.Sub(consRedistrTokens...)
 	err = k.bankKeeper.SendCoinsFromModuleToModule(ctx, k.feeCollectorName,
 		types.ConsumerToSendToProviderName, remainingTokens)
 	if err != nil {
@@ -113,15 +114,16 @@ func (k Keeper) SendRewardsToProvider(ctx sdk.Context) error {
 		transferTimeoutPeriod := k.GetTransferTimeoutPeriod(ctx)
 		timeoutTimestamp := uint64(ctx.BlockTime().Add(transferTimeoutPeriod).UnixNano())
 		for _, token := range tstProviderTokens {
-			err := k.ibcTransferKeeper.SendTransfer(ctx,
+			_, err := k.ibcTransferKeeper.Transfer(sdk.WrapSDKContext(ctx), ibctransfertypes.NewMsgTransfer(
 				transfertypes.PortID,
 				ch,
 				token,
-				tstProviderAddr,
+				tstProviderAddr.String(),
 				providerAddr,
 				timeoutHeight,
 				timeoutTimestamp,
-			)
+				"",
+			))
 			if err != nil {
 				return err
 			}
@@ -205,7 +207,7 @@ func (k Keeper) GetEstimatedNextFeeDistribution(ctx sdk.Context) types.NextFeeDi
 	totalTokens := sdk.NewDecCoinsFromCoins(total...)
 	// truncated decimals are implicitly added to provider
 	consumerTokens, _ := totalTokens.MulDec(frac).TruncateDecimal()
-	providerTokens := total.Sub(consumerTokens)
+	providerTokens := total.Sub(consumerTokens...)
 
 	return types.NextFeeDistributionEstimate{
 		CurrentHeight:        ctx.BlockHeight(),

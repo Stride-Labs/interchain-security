@@ -4,7 +4,7 @@ import (
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 	"github.com/cosmos/ibc-go/v4/testing/mock"
-	providerkeeper "github.com/cosmos/interchain-security/x/ccv/provider/keeper"
+	providerkeeper "github.com/cosmos/interchain-security/provider/x/ccv/keeper"
 	ccv "github.com/cosmos/interchain-security/x/ccv/types"
 	tmencoding "github.com/tendermint/tendermint/crypto/encoding"
 	tmprotocrypto "github.com/tendermint/tendermint/proto/tendermint/crypto"
