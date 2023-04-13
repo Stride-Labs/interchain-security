@@ -297,5 +297,5 @@ func appExport(
 		cApp = app.New(logger, db, traceStore, true, appOpts)
 	}
 
-	return cApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs)
+	return cApp.ExportAppStateAndValidators(forZeroHeight, jailAllowedAddrs, modulesToExport)
 }

@@ -5,11 +5,11 @@ package types
 
 import (
 	fmt "fmt"
-	types1 "github.com/cosmos/interchain-security/x/ccv/consumer/types"
-	types "github.com/cosmos/interchain-security/x/ccv/types"
+	types1 "github.com/cosmos/interchain-security/provider/x/consumer/types"
+	types2 "github.com/cosmos/interchain-security/provider/x/ccv/common_types"
 	_ "github.com/gogo/protobuf/gogoproto"
 	proto "github.com/gogo/protobuf/proto"
-	crypto "github.com/tendermint/tendermint/proto/tendermint/crypto"
+	crypto "github.com/cometbft/cometbft/proto/tendermint/crypto"
 	io "io"
 	math "math"
 	math_bits "math/bits"
@@ -35,7 +35,7 @@ type GenesisState struct {
 	// empty for a new chain
 	UnbondingOps []UnbondingOp `protobuf:"bytes,3,rep,name=unbonding_ops,json=unbondingOps,proto3" json:"unbonding_ops"`
 	// empty for a new chain
-	MatureUnbondingOps *types.MaturedUnbondingOps `protobuf:"bytes,4,opt,name=mature_unbonding_ops,json=matureUnbondingOps,proto3" json:"mature_unbonding_ops,omitempty"`
+	MatureUnbondingOps *types2.MaturedUnbondingOps `protobuf:"bytes,4,opt,name=mature_unbonding_ops,json=matureUnbondingOps,proto3" json:"mature_unbonding_ops,omitempty"`
 	// empty for a new chain
 	ValsetUpdateIdToHeight []ValsetUpdateIdToHeight `protobuf:"bytes,5,rep,name=valset_update_id_to_height,json=valsetUpdateIdToHeight,proto3" json:"valset_update_id_to_height"`
 	// empty for a new chain
@@ -105,7 +105,7 @@ func (m *GenesisState) GetUnbondingOps() []UnbondingOp {
 	return nil
 }
 
-func (m *GenesisState) GetMatureUnbondingOps() *types.MaturedUnbondingOps {
+func (m *GenesisState) GetMatureUnbondingOps() *types2.MaturedUnbondingOps {
 	if m != nil {
 		return m.MatureUnbondingOps
 	}
@@ -174,7 +174,7 @@ type ConsumerState struct {
 	// ConsumerGenesis defines the initial consumer chain genesis states
 	ConsumerGenesis types1.GenesisState `protobuf:"bytes,5,opt,name=consumer_genesis,json=consumerGenesis,proto3" json:"consumer_genesis"`
 	// PendingValsetChanges defines the pending validator set changes for the consumer chain
-	PendingValsetChanges []types.ValidatorSetChangePacketData `protobuf:"bytes,6,rep,name=pending_valset_changes,json=pendingValsetChanges,proto3" json:"pending_valset_changes"`
+	PendingValsetChanges []types2.ValidatorSetChangePacketData `protobuf:"bytes,6,rep,name=pending_valset_changes,json=pendingValsetChanges,proto3" json:"pending_valset_changes"`
 	SlashDowntimeAck     []string                             `protobuf:"bytes,7,rep,name=slash_downtime_ack,json=slashDowntimeAck,proto3" json:"slash_downtime_ack,omitempty"`
 	// UnbondingOpsIndex defines the unbonding operations waiting on this consumer chain
 	UnbondingOpsIndex []VscUnbondingOps `protobuf:"bytes,8,rep,name=unbonding_ops_index,json=unbondingOpsIndex,proto3" json:"unbonding_ops_index"`
@@ -248,7 +248,7 @@ func (m *ConsumerState) GetConsumerGenesis() types1.GenesisState {
 	return types1.GenesisState{}
 }
 
-func (m *ConsumerState) GetPendingValsetChanges() []types.ValidatorSetChangePacketData {
+func (m *ConsumerState) GetPendingValsetChanges() []types2.ValidatorSetChangePacketData {
 	if m != nil {
 		return m.PendingValsetChanges
 	}
@@ -1369,7 +1369,7 @@ func (m *GenesisState) Unmarshal(dAtA []byte) error {
 				return io.ErrUnexpectedEOF
 			}
 			if m.MatureUnbondingOps == nil {
-				m.MatureUnbondingOps = &types.MaturedUnbondingOps{}
+				m.MatureUnbondingOps = &types2.MaturedUnbondingOps{}
 			}
 			if err := m.MatureUnbondingOps.Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
@@ -1839,7 +1839,7 @@ func (m *ConsumerState) Unmarshal(dAtA []byte) error {
 			if postIndex > l {
 				return io.ErrUnexpectedEOF
 			}
-			m.PendingValsetChanges = append(m.PendingValsetChanges, types.ValidatorSetChangePacketData{})
+			m.PendingValsetChanges = append(m.PendingValsetChanges, types2.ValidatorSetChangePacketData{})
 			if err := m.PendingValsetChanges[len(m.PendingValsetChanges)-1].Unmarshal(dAtA[iNdEx:postIndex]); err != nil {
 				return err
 			}

@@ -8,10 +8,10 @@ import (
 	stakingtypes "github.com/cosmos/cosmos-sdk/x/staking/types"
 
 	"github.com/cosmos/interchain-security/provider/x/ccv/types"
-	utils "github.com/cosmos/interchain-security/x/ccv/utils"
+	utils "github.com/cosmos/interchain-security/provider/x/ccv/utils"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-	tmprotocrypto "github.com/tendermint/tendermint/proto/tendermint/crypto"
+	abci "github.com/cometbft/cometbft/abci/types"
+	tmprotocrypto "github.com/cometbft/cometbft/proto/tendermint/crypto"
 )
 
 // GetValidatorConsumerPubKey returns a validator's public key assigned for a consumer chain

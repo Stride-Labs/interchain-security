@@ -1,0 +1,45 @@
+global:
+  api-listen-addr: :5183
+  timeout: 10s
+  memo: ""
+  light-cache-size: 20
+chains:
+  provider:
+    type: cosmos
+    value:
+      key: rly1
+      chain-id: provider
+      rpc-addr: http://127.0.0.1:26658
+      account-prefix: cosmos
+      keyring-backend: test
+      gas-adjustment: 1.2
+      gas-prices: 0.01stake
+      min-gas-amount: 0
+      debug: false
+      timeout: 20s
+      output-format: json
+      sign-mode: direct
+  consumer:
+    type: cosmos
+    value:
+      key: rly2
+      chain-id: consumer
+      rpc-addr: http://127.0.0.1:26638
+      account-prefix: cosmos
+      keyring-backend: test
+      gas-adjustment: 1.2
+      gas-prices: 0.01stake
+      min-gas-amount: 0
+      debug: false
+      timeout: 20s
+      output-format: json
+      sign-mode: direct
+paths:
+  consumer-provider:
+    src:
+      chain-id: consumer
+    dst:
+      chain-id: provider
+    src-channel-filter:
+      rule: ""
+      channel-list: []

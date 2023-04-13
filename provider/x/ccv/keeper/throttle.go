@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
+	tmtypes "github.com/cometbft/cometbft/types"
 	sdktypes "github.com/cosmos/cosmos-sdk/types"
+	ccvtypes "github.com/cosmos/interchain-security/provider/x/ccv/common_types"
 	providertypes "github.com/cosmos/interchain-security/provider/x/ccv/types"
-	ccvtypes "github.com/cosmos/interchain-security/x/ccv/types"
-	tmtypes "github.com/tendermint/tendermint/types"
 )
 
 // This file contains functionality relevant to the throttling of slash and vsc matured packets, aka circuit breaker logic.

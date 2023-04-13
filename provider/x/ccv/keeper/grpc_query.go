@@ -6,9 +6,9 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 	sdkerrors "github.com/cosmos/cosmos-sdk/types/errors"
+	ccvtypes "github.com/cosmos/interchain-security/provider/x/ccv/common_types"
 	"github.com/cosmos/interchain-security/provider/x/ccv/types"
-	ccvtypes "github.com/cosmos/interchain-security/x/ccv/types"
-	"github.com/cosmos/interchain-security/x/ccv/utils"
+	"github.com/cosmos/interchain-security/provider/x/ccv/utils"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
