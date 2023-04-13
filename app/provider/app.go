@@ -70,6 +70,11 @@ import (
 	upgradeclient "github.com/cosmos/cosmos-sdk/x/upgrade/client"
 	upgradekeeper "github.com/cosmos/cosmos-sdk/x/upgrade/keeper"
 	upgradetypes "github.com/cosmos/cosmos-sdk/x/upgrade/types"
+	ica "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts"
+	icahost "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host"
+	icahostkeeper "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host/keeper"
+	icahosttypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/host/types"
+	icatypes "github.com/cosmos/ibc-go/v4/modules/apps/27-interchain-accounts/types"
 	"github.com/cosmos/ibc-go/v4/modules/apps/transfer"
 	ibctransferkeeper "github.com/cosmos/ibc-go/v4/modules/apps/transfer/keeper"
 	ibctransfertypes "github.com/cosmos/ibc-go/v4/modules/apps/transfer/types"
@@ -150,6 +155,7 @@ var (
 		vesting.AppModuleBasic{},
 		//router.AppModuleBasic{},
 		ibcprovider.AppModuleBasic{},
+		ica.AppModuleBasic{},
 	)
 
 	// module account permissions
@@ -161,6 +167,7 @@ var (
 		stakingtypes.NotBondedPoolName: {authtypes.Burner, authtypes.Staking},
 		govtypes.ModuleName:            {authtypes.Burner},
 		ibctransfertypes.ModuleName:    {authtypes.Minter, authtypes.Burner},
+		icatypes.ModuleName:            nil,
 	}
 )
 
@@ -208,11 +215,13 @@ type App struct { // nolint: golint
 	EvidenceKeeper evidencekeeper.Keeper
 	TransferKeeper ibctransferkeeper.Keeper
 	ProviderKeeper ibcproviderkeeper.Keeper
+	ICAHostKeeper  icahostkeeper.Keeper
 
 	// make scoped keepers public for test purposes
 	ScopedIBCKeeper         capabilitykeeper.ScopedKeeper
 	ScopedTransferKeeper    capabilitykeeper.ScopedKeeper
 	ScopedIBCProviderKeeper capabilitykeeper.ScopedKeeper
+	ScopedICAHostKeeper     capabilitykeeper.ScopedKeeper
 
 	// the module manager
 	MM *module.Manager
@@ -260,7 +269,7 @@ func New(
 		govtypes.StoreKey, paramstypes.StoreKey, ibchost.StoreKey, upgradetypes.StoreKey,
 		evidencetypes.StoreKey, ibctransfertypes.StoreKey,
 		capabilitytypes.StoreKey,
-		providertypes.StoreKey,
+		providertypes.StoreKey, icahosttypes.StoreKey,
 	)
 	tkeys := sdk.NewTransientStoreKeys(paramstypes.TStoreKey)
 	memKeys := sdk.NewMemoryStoreKeys(capabilitytypes.MemStoreKey)
@@ -298,6 +307,7 @@ func New(
 	scopedIBCKeeper := app.CapabilityKeeper.ScopeToModule(ibchost.ModuleName)
 	scopedTransferKeeper := app.CapabilityKeeper.ScopeToModule(ibctransfertypes.ModuleName)
 	scopedIBCProviderKeeper := app.CapabilityKeeper.ScopeToModule(providertypes.ModuleName)
+	scopedICAHostKeeper := app.CapabilityKeeper.ScopeToModule(icahosttypes.SubModuleName)
 	app.CapabilityKeeper.Seal()
 
 	// add keepers
@@ -450,10 +460,23 @@ func New(
 	transferModule := transfer.NewAppModule(app.TransferKeeper)
 	ibcmodule := transfer.NewIBCModule(app.TransferKeeper)
 
+	app.ICAHostKeeper = icahostkeeper.NewKeeper(
+		appCodec, keys[icahosttypes.StoreKey],
+		app.GetSubspace(icahosttypes.SubModuleName),
+		app.IBCKeeper.ChannelKeeper,
+		&app.IBCKeeper.PortKeeper,
+		app.AccountKeeper,
+		scopedICAHostKeeper,
+		app.MsgServiceRouter(),
+	)
+	icaModule := ica.NewAppModule(nil, &app.ICAHostKeeper)
+	icaHostIBCModule := icahost.NewIBCModule(app.ICAHostKeeper)
+
 	// create static IBC router, add transfer route, then set and seal it
 	ibcRouter := porttypes.NewRouter()
 	ibcRouter.AddRoute(ibctransfertypes.ModuleName, ibcmodule)
 	ibcRouter.AddRoute(providertypes.ModuleName, providerModule)
+	ibcRouter.AddRoute(icahosttypes.SubModuleName, icaHostIBCModule)
 	app.IBCKeeper.SetRouter(ibcRouter)
 
 	skipGenesisInvariants := cast.ToBool(appOpts.Get(crisis.FlagSkipGenesisInvariants))
@@ -483,6 +506,7 @@ func New(
 		params.NewAppModule(app.ParamsKeeper),
 		transferModule,
 		providerModule,
+		icaModule,
 	)
 
 	// During begin block slashing happens after distr.BeginBlocker so that
@@ -509,6 +533,7 @@ func New(
 		paramstypes.ModuleName,
 		vestingtypes.ModuleName,
 		providertypes.ModuleName,
+		icatypes.ModuleName,
 	)
 	// Interchain Security requirements
 	// 	- provider.EndBlock gets validator updates from the staking module;
@@ -534,6 +559,7 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		providertypes.ModuleName,
+		icatypes.ModuleName,
 	)
 
 	// NOTE: The genutils module must occur after staking so that pools are
@@ -560,6 +586,7 @@ func New(
 		upgradetypes.ModuleName,
 		vestingtypes.ModuleName,
 		providertypes.ModuleName,
+		icatypes.ModuleName,
 	)
 
 	app.MM.RegisterInvariants(&app.CrisisKeeper)
@@ -872,6 +899,7 @@ func initParamsKeeper(appCodec codec.BinaryCodec, legacyAmino *codec.LegacyAmino
 	paramsKeeper.Subspace(ibctransfertypes.ModuleName)
 	paramsKeeper.Subspace(ibchost.ModuleName)
 	paramsKeeper.Subspace(providertypes.ModuleName)
+	paramsKeeper.Subspace(icahosttypes.SubModuleName)
 
 	return paramsKeeper
 }
