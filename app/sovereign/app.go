@@ -472,7 +472,7 @@ func New(
 		AddRoute(ibcclienttypes.RouterKey, ibcclient.NewClientProposalHandler(app.IBCKeeper.ClientKeeper))
 
 	govConfig := govtypes.DefaultConfig()
-	app.GovKeeper = *govkeeper.NewKeeper(
+	govKeeper := govkeeper.NewKeeper(
 		appCodec,
 		keys[govtypes.StoreKey],
 		app.AccountKeeper,
@@ -482,6 +482,9 @@ func New(
 		govConfig,
 		authtypes.NewModuleAddress(govtypes.ModuleName).String(),
 	)
+
+	govKeeper.SetLegacyRouter(govRouter)
+	app.GovKeeper = *govKeeper
 	// this line is used by starport scaffolding # stargate/app/keeperDefinition
 
 	// create IBC middleware stacks by combining middleware with base application
