@@ -180,8 +180,27 @@ func ValidateProviderFeePoolAddrStr(i interface{}) error {
 	if i == "" {
 		return nil
 	}
-	// Otherwise validate as usual for a bech32 address
-	return ccvtypes.ValidateBech32(i)
+
+	address, ok := i.(string)
+	if !ok {
+		return fmt.Errorf("invalid parameter type: %T", i)
+	}
+
+	// The previous fee pool validation fails when running on the consumer chain
+	// The sdk Config stores the consumer chain's prefix, but the fee address
+	// has the provider chain's prefix
+	// To get around this, we can temporarily change the config to the provider
+	// chain ("cosmos" in Stride's case)
+	accountAddrPrefix := sdktypes.GetConfig().GetBech32AccountAddrPrefix()
+	accountPubPrefix := sdktypes.GetConfig().GetBech32AccountPubPrefix()
+	sdktypes.GetConfig().SetBech32PrefixForAccount("cosmos", "cosmospub")
+
+	_, err := sdktypes.AccAddressFromBech32(address)
+
+	// Set the config back to the consumer chain's values
+	sdktypes.GetConfig().SetBech32PrefixForAccount(accountAddrPrefix, accountPubPrefix)
+
+	return err
 }
 
 func ValidateSoftOptOutThreshold(i interface{}) error {
