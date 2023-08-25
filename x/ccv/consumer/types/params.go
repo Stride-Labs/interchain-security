@@ -116,10 +116,10 @@ func (p Params) Validate() error {
 	if err := ccvtypes.ValidateDistributionTransmissionChannel(p.DistributionTransmissionChannel); err != nil {
 		return err
 	}
-	// SKIP THIS CHECK FOR NOW (BUG: IT USES THE STRIDE BECH32 PREFIX INSTEAD OF THE COSMOS BECH32 PREFIX)
-	// if err := ValidateProviderFeePoolAddrStr(p.ProviderFeePoolAddrStr); err != nil {
-	// 	return err
-	// }
+	// ValidateProviderFeePoolAddrStr IS A NO OP (BUG: IT USES THE STRIDE BECH32 PREFIX INSTEAD OF THE COSMOS BECH32 PREFIX)
+	if err := ValidateProviderFeePoolAddrStr(p.ProviderFeePoolAddrStr); err != nil {
+		return err
+	}
 	if err := ccvtypes.ValidateDuration(p.CcvTimeoutPeriod); err != nil {
 		return err
 	}
@@ -182,7 +182,8 @@ func ValidateProviderFeePoolAddrStr(i interface{}) error {
 		return nil
 	}
 	// Otherwise validate as usual for a bech32 address
-	return ccvtypes.ValidateBech32(i)
+	// return ccvtypes.ValidateBech32(i)
+	return nil
 }
 
 func ValidateSoftOptOutThreshold(i interface{}) error {
