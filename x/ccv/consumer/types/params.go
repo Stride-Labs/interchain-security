@@ -116,9 +116,10 @@ func (p Params) Validate() error {
 	if err := ccvtypes.ValidateDistributionTransmissionChannel(p.DistributionTransmissionChannel); err != nil {
 		return err
 	}
-	if err := ValidateProviderFeePoolAddrStr(p.ProviderFeePoolAddrStr); err != nil {
-		return err
-	}
+	// SKIP THIS CHECK FOR NOW (BUG: IT USES THE STRIDE BECH32 PREFIX INSTEAD OF THE COSMOS BECH32 PREFIX)
+	// if err := ValidateProviderFeePoolAddrStr(p.ProviderFeePoolAddrStr); err != nil {
+	// 	return err
+	// }
 	if err := ccvtypes.ValidateDuration(p.CcvTimeoutPeriod); err != nil {
 		return err
 	}
