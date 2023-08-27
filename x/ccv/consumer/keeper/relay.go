@@ -25,6 +25,7 @@ import (
 func (k Keeper) OnRecvVSCPacket(ctx sdk.Context, packet channeltypes.Packet, newChanges ccv.ValidatorSetChangePacketData) exported.Acknowledgement {
 	// get the provider channel
 	providerChannel, found := k.GetProviderChannel(ctx)
+	k.Logger(ctx).Info("[MOOSE] ProviderChannel:", providerChannel, "found:", found)
 	if found && providerChannel != packet.DestinationChannel {
 		// VSC packet was sent on a channel different than the provider channel;
 		// this should never happen
@@ -54,7 +55,7 @@ func (k Keeper) OnRecvVSCPacket(ctx sdk.Context, packet channeltypes.Packet, new
 		currentValUpdates = currentChanges.ValidatorUpdates
 	}
 	pendingChanges := ccv.AccumulateChanges(currentValUpdates, newChanges.ValidatorUpdates)
-
+	k.Logger(ctx).Info("[MOOSE] pendingChanges:", pendingChanges)
 	k.SetPendingChanges(ctx, ccv.ValidatorSetChangePacketData{
 		ValidatorUpdates: pendingChanges,
 	})
@@ -62,7 +63,7 @@ func (k Keeper) OnRecvVSCPacket(ctx sdk.Context, packet channeltypes.Packet, new
 	// Save maturity time and packet
 	maturityTime := ctx.BlockTime().Add(k.GetUnbondingPeriod(ctx))
 	k.SetPacketMaturityTime(ctx, newChanges.ValsetUpdateId, maturityTime)
-	k.Logger(ctx).Debug("packet maturity time was set",
+	k.Logger(ctx).Info("packet maturity time was set",
 		"vscID", newChanges.ValsetUpdateId,
 		"maturity time (utc)", maturityTime.UTC(),
 		"maturity time (nano)", uint64(maturityTime.UnixNano()),
@@ -71,7 +72,7 @@ func (k Keeper) OnRecvVSCPacket(ctx sdk.Context, packet channeltypes.Packet, new
 	// set height to VSC id mapping
 	blockHeight := uint64(ctx.BlockHeight()) + 1
 	k.SetHeightValsetUpdateID(ctx, blockHeight, newChanges.ValsetUpdateId)
-	k.Logger(ctx).Debug("block height was mapped to vscID", "height", blockHeight, "vscID", newChanges.ValsetUpdateId)
+	k.Logger(ctx).Info("block height was mapped to vscID", "height", blockHeight, "vscID", newChanges.ValsetUpdateId)
 
 	// remove outstanding slashing flags of the validators
 	// for which the slashing was acknowledged by the provider chain

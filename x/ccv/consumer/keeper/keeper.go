@@ -441,6 +441,7 @@ func (k Keeper) VerifyProviderChain(ctx sdk.Context, connectionHops []string) er
 
 // SetHeightValsetUpdateID sets the valset update id for a given block height
 func (k Keeper) SetHeightValsetUpdateID(ctx sdk.Context, height, valsetUpdateId uint64) {
+	k.Logger(ctx).Info("[MOOSE] SetHeightValsetUpdateID", "height", height, "valsetUpdateId", valsetUpdateId)
 	store := ctx.KVStore(k.storeKey)
 	valBytes := make([]byte, 8)
 	binary.BigEndian.PutUint64(valBytes, valsetUpdateId)
