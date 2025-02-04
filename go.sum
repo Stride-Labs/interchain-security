@@ -221,8 +221,10 @@ github.com/OneOfOne/xxhash v1.2.2 h1:KMrpdQIwFcEqXDklaen+P1axHaj9BSKzvpUUfnHldSE
 github.com/OneOfOne/xxhash v1.2.2/go.mod h1:HSdplMjZKSmBqAxg5vPj2TmRDmfkzw+cTzAElWljhcU=
 github.com/Shopify/sarama v1.19.0/go.mod h1:FVkBWblsNy7DGZRfXLU0O9RCGt5g3g3yEuWXgklEdEo=
 github.com/Shopify/toxiproxy v2.1.4+incompatible/go.mod h1:OXgGpZ6Cli1/URJOF1DMxUHB2q5Ap20/P/eIdh4G0pI=
-github.com/Stride-Labs/cosmos-sdk v0.47.15-stride-distribution-fix-0-mempool-verbose-error-1beta h1:N1gBUX5mABphE2xNQY8f/viF02zMsgdY+S1WMl/ypKc=
-github.com/Stride-Labs/cosmos-sdk v0.47.15-stride-distribution-fix-0-mempool-verbose-error-1beta/go.mod h1:RnJ3fSU8gglficCdjI748li1qnIo6Ljs6qsAoqIjh4E=
+github.com/Stride-Labs/cosmos-sdk v0.47.15-stride-distribution-fix-0-mempool-verbose-error-1beta3 h1:mMN8v3hr0xRT8UpZqD5/eqi2ngBA0QFG/aQWcL9DbsY=
+github.com/Stride-Labs/cosmos-sdk v0.47.15-stride-distribution-fix-0-mempool-verbose-error-1beta3/go.mod h1:RnJ3fSU8gglficCdjI748li1qnIo6Ljs6qsAoqIjh4E=
+github.com/Stride-Labs/ibc-go/v7 v7.4.0-mempool-verbose-error-1beta3 h1:5Cz0rH0zG7jxZDj9MHXU64VSQ/FVGscrUFkebN+iYEE=
+github.com/Stride-Labs/ibc-go/v7 v7.4.0-mempool-verbose-error-1beta3/go.mod h1:7V7RKM1U9SW72o2BgilHJn4fUzHFVnd+bnypy1EYpRI=
 github.com/VividCortex/gohistogram v1.0.0 h1:6+hBz+qvs0JOrrNhhmR7lFxo5sINxBCGXrdtl/UvroE=
 github.com/VividCortex/gohistogram v1.0.0/go.mod h1:Pf5mBqqDxYaXu3hDrrU+w6nw50o/4+TcAqDqk/vUH7g=
 github.com/adlio/schema v1.3.3 h1:oBJn8I02PyTB466pZO1UZEn1TV5XLlifBSyMrmHl/1I=
@@ -340,8 +342,6 @@ github.com/cosmos/gogoproto v1.7.0 h1:79USr0oyXAbxg3rspGh/m4SWNyoz/GLaAh0QlCe2fr
 github.com/cosmos/gogoproto v1.7.0/go.mod h1:yWChEv5IUEYURQasfyBW5ffkMHR/90hiHgbNgrtp4j0=
 github.com/cosmos/iavl v0.20.1 h1:rM1kqeG3/HBT85vsZdoSNsehciqUQPWrR4BYmqE2+zg=
 github.com/cosmos/iavl v0.20.1/go.mod h1:WO7FyvaZJoH65+HFOsDir7xU9FWk2w9cHXNW1XHcl7A=
-github.com/cosmos/ibc-go/v7 v7.3.1 h1:bil1IjnHdyWDASFYKfwdRiNtFP6WK3osW7QFEAgU4I8=
-github.com/cosmos/ibc-go/v7 v7.3.1/go.mod h1:wvx4pPBofe5ZdMNV3OFRxSI4auEP5Qfqf8JXLLNV04g=
 github.com/cosmos/ics23/go v0.10.0 h1:iXqLLgp2Lp+EdpIuwXTYIQU+AiHj9mOC2X9ab++bZDM=
 github.com/cosmos/ics23/go v0.10.0/go.mod h1:ZfJSmng/TBNTBkFemHHHj5YY7VAU/MBU980F4VU1NG0=
 github.com/cosmos/ledger-cosmos-go v0.12.4 h1:drvWt+GJP7Aiw550yeb3ON/zsrgW0jgh5saFCr7pDnw=

@@ -204,4 +204,6 @@ require (
 // following versions might cause unexpected behavior
 replace github.com/syndtr/goleveldb => github.com/syndtr/goleveldb v1.0.1-0.20210819022825-2ae1ddf74ef7
 
-replace github.com/cosmos/cosmos-sdk => github.com/Stride-Labs/cosmos-sdk v0.47.15-stride-distribution-fix-0-mempool-verbose-error-1beta
+replace github.com/cosmos/cosmos-sdk => github.com/Stride-Labs/cosmos-sdk v0.47.15-stride-distribution-fix-0-mempool-verbose-error-1beta3
+
+replace github.com/cosmos/ibc-go/v7 => github.com/Stride-Labs/ibc-go/v7 v7.4.0-mempool-verbose-error-1beta3
